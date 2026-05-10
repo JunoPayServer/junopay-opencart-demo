@@ -20,11 +20,14 @@ fi
 mkdir -p /var/run/mysqld
 chown -R mysql:mysql /var/run/mysqld /var/lib/mysql
 
-if [[ ! -d /var/lib/mysql/mysql ]]; then
-  mariadb-install-db --user=mysql --datadir=/var/lib/mysql >/dev/null
+if [[ ! -f /var/lib/mysql/junopay-demo-init ]]; then
+  rm -rf /var/lib/mysql/*
+  mariadb-install-db --user=mysql --datadir=/var/lib/mysql --auth-root-authentication-method=normal >/dev/null
+  touch /var/lib/mysql/junopay-demo-init
+  chown -R mysql:mysql /var/lib/mysql
 fi
 
-mysqld_safe --datadir=/var/lib/mysql --skip-grant-tables --skip-networking=0 --bind-address=127.0.0.1 &
+mysqld_safe --datadir=/var/lib/mysql --skip-networking=0 --bind-address=127.0.0.1 &
 mysql_pid="$!"
 
 for _ in $(seq 1 60); do
@@ -36,6 +39,11 @@ done
 
 mysql -uroot <<SQL
 CREATE DATABASE IF NOT EXISTS \`${OPENCART_DB_NAME}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER IF NOT EXISTS '${OPENCART_DB_USER}'@'%' IDENTIFIED BY '${OPENCART_DB_PASSWORD}';
+CREATE USER IF NOT EXISTS '${OPENCART_DB_USER}'@'localhost' IDENTIFIED BY '${OPENCART_DB_PASSWORD}';
+GRANT ALL PRIVILEGES ON \`${OPENCART_DB_NAME}\`.* TO '${OPENCART_DB_USER}'@'%';
+GRANT ALL PRIVILEGES ON \`${OPENCART_DB_NAME}\`.* TO '${OPENCART_DB_USER}'@'localhost';
+FLUSH PRIVILEGES;
 SQL
 
 if ! mysql -h 127.0.0.1 -u"${OPENCART_DB_USER}" -p"${OPENCART_DB_PASSWORD}" "${OPENCART_DB_NAME}" -e "SHOW TABLES LIKE 'oc_setting';" | grep -q oc_setting; then
