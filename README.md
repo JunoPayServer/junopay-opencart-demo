@@ -2,7 +2,7 @@
 
 Deployable OpenCart demo store for the JunoPay payment extension.
 
-The image installs OpenCart 3.0.5.0, MariaDB, and the bundled `junopay` payment extension. On startup it bootstraps a demo store, enables JunoPay, and creates a `1 gallon of air` product priced at `1 JUNO`.
+The image installs OpenCart 3.0.5.0, MariaDB, and the `junopay` payment extension from [`JunoPayServer/junopay-opencart-plugin`](https://github.com/JunoPayServer/junopay-opencart-plugin). On startup it bootstraps a demo store, enables JunoPay, and creates a `1 gallon of air` product priced at `1 JUNO`.
 
 ## Runtime configuration
 

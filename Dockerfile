@@ -1,6 +1,7 @@
 FROM php:8.2-apache
 
 ARG OPENCART_VERSION=3.0.5.0
+ARG JUNOPAY_OPENCART_PLUGIN_REF=4f058d4b3fd004c1b973d73f62e07a226e423d4e
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends unzip curl mariadb-server mariadb-client libpng-dev libjpeg-dev libzip-dev libicu-dev \
@@ -13,10 +14,14 @@ RUN curl -fsSL -o /tmp/opencart.zip "https://github.com/opencart/opencart/releas
     && unzip -q /tmp/opencart.zip -d /tmp/opencart \
     && cp -a /tmp/opencart/upload/. /var/www/html/ \
     && cp /var/www/html/config-dist.php /var/www/html/config.php \
-    && cp /var/www/html/admin/config-dist.php /var/www/html/admin/config.php \
-    && rm -rf /tmp/opencart /tmp/opencart.zip
+	    && cp /var/www/html/admin/config-dist.php /var/www/html/admin/config.php \
+	    && rm -rf /tmp/opencart /tmp/opencart.zip
 
-COPY plugin/ /var/www/html/
+RUN curl -fsSL -o /tmp/junopay-opencart-plugin.tar.gz "https://github.com/JunoPayServer/junopay-opencart-plugin/archive/${JUNOPAY_OPENCART_PLUGIN_REF}.tar.gz" \
+    && mkdir -p /tmp/junopay-opencart-plugin \
+    && tar -xzf /tmp/junopay-opencart-plugin.tar.gz -C /tmp/junopay-opencart-plugin --strip-components=1 \
+    && cp -a /tmp/junopay-opencart-plugin/. /var/www/html/ \
+    && rm -rf /tmp/junopay-opencart-plugin /tmp/junopay-opencart-plugin.tar.gz
 COPY scripts/entrypoint.sh /usr/local/bin/junopay-opencart-entrypoint
 COPY scripts/seed-demo.php /usr/local/bin/seed-demo.php
 
