@@ -1,7 +1,7 @@
 FROM php:8.2-apache
 
 ARG OPENCART_VERSION=3.0.5.0
-ARG JUNOPAY_OPENCART_PLUGIN_REF=4f058d4b3fd004c1b973d73f62e07a226e423d4e
+ARG JUNOPAY_OPENCART_PLUGIN_REF=1df780b8cb88ef2ef00acd5dbb7ff374f53f2ecc
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends unzip curl mariadb-server mariadb-client libpng-dev libjpeg-dev libzip-dev libicu-dev \
@@ -24,6 +24,7 @@ RUN curl -fsSL -o /tmp/junopay-opencart-plugin.tar.gz "https://github.com/JunoPa
     && rm -rf /tmp/junopay-opencart-plugin /tmp/junopay-opencart-plugin.tar.gz
 COPY scripts/entrypoint.sh /usr/local/bin/junopay-opencart-entrypoint
 COPY scripts/seed-demo.php /usr/local/bin/seed-demo.php
+COPY scripts/opencart-home.php /usr/local/bin/opencart-home.php
 
 RUN chmod +x /usr/local/bin/junopay-opencart-entrypoint \
     && sed -ri "s/Listen 80/Listen 8080/" /etc/apache2/ports.conf \

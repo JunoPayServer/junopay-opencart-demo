@@ -71,5 +71,6 @@ q($mysqli, "INSERT INTO oc_product SET model = 'AIR-1', sku = '', upc = '', ean 
 $productId = $mysqli->insert_id;
 q($mysqli, "INSERT INTO oc_product_description SET product_id = {$productId}, language_id = 1, name = '1 gallon of air', description = 'A demo product for the JunoPay OpenCart gateway.', tag = '', meta_title = '1 gallon of air', meta_description = '', meta_keyword = ''");
 q($mysqli, "INSERT INTO oc_product_to_store SET product_id = {$productId}, store_id = 0");
+q($mysqli, "INSERT INTO oc_product_to_category SET product_id = {$productId}, category_id = 20");
 
 $mysqli->close();

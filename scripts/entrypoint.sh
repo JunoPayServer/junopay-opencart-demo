@@ -63,6 +63,7 @@ fi
 rm -rf /var/www/html/install
 
 php /usr/local/bin/seed-demo.php
+cp /usr/local/bin/opencart-home.php /var/www/html/catalog/controller/common/home.php
 
 chown -R www-data:www-data /var/www/html
 
