@@ -1,7 +1,7 @@
 FROM php:8.2-apache
 
 ARG OPENCART_VERSION=3.0.5.0
-ARG JUNOPAY_OPENCART_PLUGIN_REF=4a24284ada14cd70b84da6f945ee424e57f92a36
+ARG JUNOPAY_OPENCART_PLUGIN_REF=d87f8200a0d8a0186df8002f9e06eebccc1e5c43
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends unzip curl mariadb-server mariadb-client libpng-dev libjpeg-dev libzip-dev libicu-dev \
